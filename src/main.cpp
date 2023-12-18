@@ -157,8 +157,8 @@ void sendSensorReadings(int aqiIndex, float humidity_f, float temp_f,
   }
 
   // Serial.println("\t AuthToken verificare: " + authToken);
-  const char *authToken_c_str = authToken.c_str();
-  const char *bearerHeader_c_str = String("Bearer " + authToken).c_str();
+  String bearer = "Bearer " + authToken;
+  const char *bearerHeader_c_str = bearer.c_str();
   Serial.print("\t AuthToken verificare:");
   Serial.println(bearerHeader_c_str);
 
