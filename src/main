@@ -1,0 +1,37 @@
+#include <Arduino.h>
+#include <driver/adc.h>
+#include <WiFi.h>
+#include <arduino_secrets.h>
+
+const int analogPin = 39;
+
+char ssid[] = SECRET_SSID;
+char pass[] = SECRET_PASS;
+
+void setup()
+{
+    // WiFi.mode(WIFI_STA);
+    // WiFi.begin(ssid, pass);
+    // Serial.print("Connecting to WiFi ..");
+    // while (WiFi.status() != WL_CONNECTED)
+    // {
+    //     Serial.print('.');
+    //     delay(1000);
+    // }
+
+    // adc1_config_width(ADC_WIDTH_BIT_12);
+    // adc1_config_channel_atten(ADC1_CHANNEL_3, ADC_ATTEN_DB_0);
+
+    // pinMode(analogPin, INPUT);
+
+    analogSetAttenuation(ADC_11db);
+    Serial.begin(115200);
+}
+
+void loop()
+{
+    int value = analogRead(analogPin);
+    Serial.println(value);
+    delay(1500);
+}
+

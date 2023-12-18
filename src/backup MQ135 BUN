@@ -1,0 +1,28 @@
+#include <Arduino.h>
+#include <driver/adc.h>
+
+const int mqPin = 12; // Pin connected to MQ135 sensor
+
+void setup()
+{
+    Serial.begin(115200);
+}
+
+void loop()
+{
+    int read_raw;
+    adc2_config_channel_atten(ADC2_CHANNEL_2, ADC_ATTEN_0db);
+
+    esp_err_t r = adc2_get_raw(ADC2_CHANNEL_2, ADC_WIDTH_12Bit, &read_raw);
+    if (r == ESP_OK)
+    {
+        printf("%d\n", read_raw);
+    }
+    else if (r == ESP_ERR_TIMEOUT)
+    {
+        printf("ADC2 used by Wi-Fi.\n");
+    }
+
+    delay(1500);
+}
+

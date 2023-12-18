@@ -1,0 +1,75 @@
+#include <Adafruit_AHTX0.h>
+#include <MQ135.h>
+
+#define PIN_MQ135 12 // MQ135 Analog Input Pin
+
+// MQ135 aqiSensor = MQ135(PIN_MQ135);
+Adafruit_AHTX0 aht;
+
+int sensorValue;
+
+void setup()
+{
+    Serial.begin(115200);
+
+    if (!aht.begin())
+    {
+        Serial.println("Could not find AHT.");
+        while (1)
+            delay(10);
+    }
+
+    // pinMode(PIN_MQ135, INPUT);
+}
+
+void loop()
+{
+    // Read temperature and humidity from AHT21
+    sensors_event_t humidity, temp;
+    aht.getEvent(&humidity, &temp); // populate temp and humidity objects with fresh data
+
+    float temp_f = temp.temperature;
+    float humidity_f = humidity.relative_humidity;
+
+    Serial.print("\n------------------------------\n");
+    Serial.print("AHTx0\n- Temperature: ");
+    Serial.print(temp_f);
+    Serial.println(" degrees C");
+
+    Serial.print("- Humidity: ");
+    Serial.print(humidity_f);
+    Serial.println("% rH");
+
+    // // Read CO2 from MQ135
+    // float rzero = aqiSensor.getRZero();
+    // float correctedRZero = aqiSensor.getCorrectedRZero(temp_f, humidity_f);
+    // float resistance = aqiSensor.getResistance();
+    // float ppm = aqiSensor.getPPM();
+    // float correctedPPM = aqiSensor.getCorrectedPPM(temp_f, humidity_f);
+
+    // Serial.print("\nMQ135\n- RZero: ");
+    // Serial.print(rzero);
+    // Serial.println(" kOhm");
+
+    // Serial.print("- Corrected RZero: ");
+    // Serial.print(correctedRZero);
+    // Serial.println(" kOhm");
+
+    // Serial.print("- Resistance: ");
+    // Serial.print(resistance);
+    // Serial.println(" kOhm");
+
+    // Serial.print("- PPM: ");
+    // Serial.print(ppm);
+    // Serial.println(" ppm");
+
+    // Serial.print("- Corrected PPM: ");
+    // Serial.print(correctedPPM);
+    // Serial.println(" ppm");
+
+    int aqiValue = analogRead(PIN_MQ135);
+    Serial.print("Air Quality Index: ");
+    Serial.println(aqiValue);
+
+    delay(1000);
+}
