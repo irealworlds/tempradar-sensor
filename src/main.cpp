@@ -162,26 +162,25 @@ void sendSensorReadings(int aqiIndex, float humidity_f, float temp_f,
   Serial.print("\t AuthToken verificare:");
   Serial.println(bearerHeader_c_str);
 
-  client.beginRequest();
-  client.sendHeader("Accept", "application/json");
-  client.sendHeader("Authorization", bearerHeader_c_str);
-  client.sendHeader("Content-Type", "application/json");
-
-  Serial.println(authToken);
-
-  Serial.println("making POST request");
+  // Build post data
   DynamicJsonDocument readingJson(1024);
   readingJson["airQuality"] = aqiIndex;
   readingJson["humidity"] = humidity_f;
   readingJson["temperature"] = temp_f;
-
   String postData;
   serializeJson(readingJson, postData);
 
-  client.post(url_c_str, "application/json", postData);
-
+  // Send the request
+  client.beginRequest();
+  client.post(url_c_str);
+  client.sendHeader("Content-Type", "application/json");
+  client.sendHeader("Content-Length", postData.length());
+  client.sendHeader("Authorization", bearerHeader_c_str);
+  client.beginBody();
+  client.print(postData);
   client.endRequest();
 
+  // Print the result
   int statusCode = client.responseStatusCode();
   String response = client.responseBody();
 
@@ -190,6 +189,7 @@ void sendSensorReadings(int aqiIndex, float humidity_f, float temp_f,
   Serial.print("Response: ");
   Serial.println(response);
 
+  // If authorization fails, try to log in again
   if (statusCode == 401) {
     login();
   }
